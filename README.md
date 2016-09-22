@@ -4,92 +4,45 @@
 
 ### Key Observation
 
-It's easy to compute the water capacity between two maximums.
+It's easy to compute the water capacity between the highest points.
 
 ```
                    max1
-                     |           max2
+        left         |           max2      right
 <----- subprob ----->|<-- easy -->|<----- subprob ----->
                      |            |
                      |            |
 ========================================================
 ```
 
-### Step 1
+### A closer look at the left subproblem
 
-We find the max and setup two pointers (called `left` and `right`) at its position.
-
-```
-   max_left = max_right
-            |
-            |
-            |
-            |
-============|============================================
-       left = right
-```
-
-### Step 2
-
-We find the next max and compute the water capacity between the two maximums.
+If we find the max then we can compute the water capacity between `max` and `max1`. We also have another `left subproblem`
 
 ```
-           max_left
-            |              max_right
-            |               |
-            |               |
-            |               |
-============|===============|============================
-           left            right
+                                                   max1
+                                                    |
+                    max                             |
+                     |                              |
+        left         |                              |
+<----- subprob ----->|<----------- easy ----------->|
+                     |                              |
+=====================================================
 ```
 
-### Step 3
+### A closer look at the right subproblem
 
-We find the next max but this time we're facing 3 cases.
+If we find the max then we can compute the water capacity between `max2` and `max`. We also have another `right subproblem`
 
-**1. The new max is located between `left` and `right`.**
-
-```
-           max_left
-            |              max_right
-            |        m      |
-            |        |      |
-            |        |      |
-============|===============|============================
-           left      i     right
-```
-
-We can skip this case since we already computed the capacity between these two points.
-
-**2. The new max is located after the `right` pointer.**
-
-```
-           max_left
-            |              max_right
-            |               |             m
-            |               |             |
-            |               |             |
-============|===============|=============|==============
-           left            right          i
-```
-We can compute the capacity between `right` and `i`. Then we update the position of the `right` pointer.
-
-```
-           max_left
-            |              
-            |                             max_right
-            |                             |
-            |                             |
-============|=============================|===========
-           left                           right
+```   
+max2            
+|                                                   
+|                 max                                 
+|                  |                              
+|                  |              right                
+|<----- easy ----->|<---------- subproblem --------->
+|                  |                              
+=====================================================
 ```
 
-**3. The new max is located before the `left` pointer.**
-
-This case is similar to the previous one but we compute the capacity between `i` and `left`, and we update the `left` pointer.
-
-### Next steps
-
-We repeat the last step until the entire array has been visited.
-
-
+We can implement a recursive solution.
